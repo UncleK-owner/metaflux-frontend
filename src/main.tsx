@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { BrowserRouter } from 'react-router'
+import { BrowserRouter, Navigate } from 'react-router'
 import { Route } from 'react-router'
 import AboutPage from './pages/AboutPage.tsx'
 import UploadPage from './pages/file-upload/UploadPage.tsx'
@@ -13,9 +13,10 @@ ReactDOM.createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route index element={<App />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="upload" element={<UploadPage />} />
+        <Route index path="/app" element={<App />} />
+        <Route path="*" element={<Navigate to="/app" />} />
+        <Route path="/app/about" element={<AboutPage />} />
+        <Route path="/app/upload" element={<UploadPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
