@@ -17,6 +17,7 @@ import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../../../theme/AppTheme';
 import ColorModeSelect from '../../../theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
+import { useNavigate } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -61,6 +62,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+    const navigate = useNavigate();
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
@@ -76,6 +78,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         if (emailError || passwordError) {
             event.preventDefault();
             return;
@@ -85,6 +88,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             email: data.get('email'),
             password: data.get('password'),
         });
+
+        navigate('/app/dashboard');
     };
 
     const validateInputs = () => {

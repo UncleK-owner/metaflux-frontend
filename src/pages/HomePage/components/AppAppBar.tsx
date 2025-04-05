@@ -77,14 +77,7 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button
-              color="primary" variant="text" size="small" component="a" href="/app/sign-in"
-            >
-              Sign in
-            </Button>
-            <Button color="primary" variant="contained" size="small">
-              Sign up
-            </Button>
+            <Button color="primary" variant="text" size="small" component="a" href="/app/sign-in">Sign in</Button>
             <ColorModeIconDropdown />
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
