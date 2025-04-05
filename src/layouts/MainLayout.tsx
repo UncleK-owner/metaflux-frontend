@@ -10,7 +10,7 @@ export default function MainLayout(props: { children: React.ReactNode; disableCu
     return (
         <AppTheme {...props}>
             <CssBaseline enableColorScheme />
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', height: '100vh' }}>
                 <SideMenu />
                 <AppNavbar />
                 {/* Main content */}
@@ -19,6 +19,7 @@ export default function MainLayout(props: { children: React.ReactNode; disableCu
                     sx={{
                         flexGrow: 1,
                         overflow: 'auto',
+                        height: '100%',
                     }}
                 >
                     <Stack
@@ -28,6 +29,7 @@ export default function MainLayout(props: { children: React.ReactNode; disableCu
                             mx: 3,
                             pb: 5,
                             mt: { xs: 8, md: 0 },
+                            height: '100%',
                         }}
                     >
                         {props.children}
