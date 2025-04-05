@@ -12,7 +12,7 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
       paper: ({ theme }) => ({
         marginTop: 4,
         borderRadius: theme.shape.borderRadius,
-        border: `1px solid ${(theme.vars || theme).palette.divider}`,
+        border: `1px solid ${theme.palette.divider}`,
         backgroundImage: 'none',
         background: 'hsl(0, 0%, 100%)',
         boxShadow:
@@ -34,9 +34,7 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
       spacer: { width: 16 },
       button: ({ theme }) => ({
         backgroundColor: 'transparent',
-        color: (theme.vars || theme).palette.grey[500],
         ...theme.applyStyles('dark', {
-          color: (theme.vars || theme).palette.grey[400],
         }),
       }),
     },
@@ -53,11 +51,9 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
     styleOverrides: {
       monthButton: ({ theme }) => ({
         fontSize: theme.typography.body1.fontSize,
-        color: (theme.vars || theme).palette.grey[600],
         padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadius,
         '&:hover': {
-          backgroundColor: (theme.vars || theme).palette.action.hover,
         },
         [`&.${pickersMonthClasses.selected}`]: {
           backgroundColor: gray[700],
@@ -70,12 +66,9 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
           [`&.${pickersMonthClasses.selected}`]: { backgroundColor: gray[700] },
         },
         ...theme.applyStyles('dark', {
-          color: (theme.vars || theme).palette.grey[300],
           '&:hover': {
-            backgroundColor: (theme.vars || theme).palette.action.hover,
           },
           [`&.${pickersMonthClasses.selected}`]: {
-            color: (theme.vars || theme).palette.common.black,
             fontWeight: theme.typography.fontWeightMedium,
             backgroundColor: gray[300],
           },
@@ -93,12 +86,10 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
     styleOverrides: {
       yearButton: ({ theme }) => ({
         fontSize: theme.typography.body1.fontSize,
-        color: (theme.vars || theme).palette.grey[600],
         padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadius,
         height: 'fit-content',
         '&:hover': {
-          backgroundColor: (theme.vars || theme).palette.action.hover,
         },
         [`&.${pickersYearClasses.selected}`]: {
           backgroundColor: gray[700],
@@ -111,12 +102,9 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
           [`&.${pickersYearClasses.selected}`]: { backgroundColor: gray[700] },
         },
         ...theme.applyStyles('dark', {
-          color: (theme.vars || theme).palette.grey[300],
           '&:hover': {
-            backgroundColor: (theme.vars || theme).palette.action.hover,
           },
           [`&.${pickersYearClasses.selected}`]: {
-            color: (theme.vars || theme).palette.common.black,
             fontWeight: theme.typography.fontWeightMedium,
             backgroundColor: gray[300],
           },
@@ -134,11 +122,9 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
     styleOverrides: {
       root: ({ theme }) => ({
         fontSize: theme.typography.body1.fontSize,
-        color: (theme.vars || theme).palette.grey[600],
         padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadius,
         '&:hover': {
-          backgroundColor: (theme.vars || theme).palette.action.hover,
         },
         [`&.${pickersDayClasses.selected}`]: {
           backgroundColor: gray[700],
@@ -151,12 +137,9 @@ export const datePickersCustomizations: PickersProComponents<Theme> & PickerComp
           [`&.${pickersDayClasses.selected}`]: { backgroundColor: gray[700] },
         },
         ...theme.applyStyles('dark', {
-          color: (theme.vars || theme).palette.grey[300],
           '&:hover': {
-            backgroundColor: (theme.vars || theme).palette.action.hover,
           },
           [`&.${pickersDayClasses.selected}`]: {
-            color: (theme.vars || theme).palette.common.black,
             fontWeight: theme.typography.fontWeightMedium,
             backgroundColor: gray[300],
           },
