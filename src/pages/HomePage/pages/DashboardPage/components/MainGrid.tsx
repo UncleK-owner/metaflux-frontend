@@ -73,7 +73,7 @@ export default function MainGrid() {
           <PageViewsBarChart />
         </Grid>
       </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+      {/* <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Details
       </Typography>
       <Grid container spacing={2} columns={12}>
@@ -87,7 +87,7 @@ export default function MainGrid() {
           </Stack>
         </Grid>
       </Grid>
-      <Copyright sx={{ my: 4 }} />
+      <Copyright sx={{ my: 4 }} /> */}
     </Box>
   );
 }

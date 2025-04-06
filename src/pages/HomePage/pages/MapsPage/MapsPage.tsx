@@ -1,14 +1,15 @@
 import * as React from 'react';
-import MainLayout from '../../../../layouts/MainLayout';
-import Header from '../../../../layouts/components/Header';
+import MainLayout from '@layouts/MainLayout';
+import Header from '@layouts/components/Header';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { Box } from '@mui/material';
 
 export default function MapsPage(props: { disableCustomTheme?: boolean }) {
     return (
-        <MainLayout {...props}>
+        <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' }, height: '100vh' }}>
             <Header />
             <MapComponent />
-        </MainLayout>
+        </Box>
     );
 }
 
@@ -24,11 +25,9 @@ const center = {
 
 function MapComponent() {
     return (
-        <LoadScript googleMapsApiKey="AIzaSyAEXt4TDhvP5EekhMZ1FcxT1ad2A7o0A2g">
-            <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-                {/* Add markers or other components here */}
-            </GoogleMap>
-        </LoadScript>
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+            {/* Add markers or other components here */}
+        </GoogleMap>
     );
 }
 
