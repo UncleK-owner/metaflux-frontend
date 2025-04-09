@@ -4,57 +4,88 @@ import UploadFileOutlined from '@mui/icons-material/UploadFileOutlined';
 import { DataGrid, GridToolbarContainer, GridColDef } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
+const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
-    {
-        field: 'firstName',
-        headerName: 'First name',
-        width: 150,
-        editable: true,
-    },
-    {
-        field: 'lastName',
-        headerName: 'Last name',
-        width: 150,
-        editable: true,
-    },
-    {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 110,
-        editable: true,
-    },
-    {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: false,
-        width: 160,
-        valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-    },
-];
-
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    { field: 'file_name', headerName: 'File Name', width: 200 },
+    { field: 'file_extension', headerName: 'File Extension', width: 150 },
+    { field: 'file_size', headerName: 'File Size', width: 150 },
+    { field: 'uploaded_at', headerName: 'Uploaded At', width: 200 },
+    { field: 'status', headerName: 'Status', width: 150 },
 ];
 
 export default function UploadDataGrid() {
+    interface RowData {
+        id: number;
+        file_name: string;
+        file_extension: string;
+        file_size: number;
+        uploaded_at: string;
+        status: string;
+    }
+
+    const [rows, setRows] = React.useState<RowData[]>([]);
+
+    // Fetch tasks from the server
+    const fetchTasks = React.useCallback(() => {
+        fetch('https://starkapin.duckdns.org/webhook/tasks/uploaded?limit=50', {
+            method: 'GET',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch uploaded tasks');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const updatedRows = Array.isArray(data)
+                    ? data.map((item: any) => ({
+                        id: item.id,
+                        file_name: item.file_name,
+                        file_extension: item.file_extension,
+                        file_size: item.file_size,
+                        uploaded_at: item.uploaded_at,
+                        status: item.status,
+                    }))
+                    : [];
+                setRows(updatedRows);
+            })
+            .catch((error) => {
+                console.error('Error fetching uploaded tasks:', error);
+            });
+    }, []);
+
+    // Handle file upload
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             console.log('Uploaded file:', file.name);
-            // 파일 처리 로직 추가
+            const formData = new FormData();
+            formData.append('task', file);
+
+            fetch('https://starkapin.duckdns.org/webhook/tasks/upload', {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('File upload failed');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('File uploaded successfully:', data);
+                    fetchTasks(); // Fetch tasks after successful upload
+                })
+                .catch((error) => {
+                    console.error('Error uploading file:', error);
+                });
         }
     };
+
+    // Fetch tasks on component mount
+    React.useEffect(() => {
+        fetchTasks();
+    }, [fetchTasks]);
 
     const CustomToolbar = () => (
         <GridToolbarContainer sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -65,16 +96,10 @@ export default function UploadDataGrid() {
                 sx={{ marginBottom: 1 }}
             >
                 Upload File
-                <input
-                    type="file"
-                    hidden
-                    onChange={handleFileUpload}
-                />
+                <input type="file" hidden onChange={handleFileUpload} />
             </Button>
         </GridToolbarContainer>
     );
-
-
 
     return (
         <Box sx={{ height: '100%', width: '100%', mt: 2 }}>
