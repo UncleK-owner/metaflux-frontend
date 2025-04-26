@@ -21,23 +21,35 @@
     "jsx": "react-jsx",
     "baseUrl": "./",
     "paths": {
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@infrastructure/*": [
+        "src/infrastructure/*"
+      ],
+      "@application/*": [
+        "src/application/*"
+      ],
+      "@presentation/*": [
+        "src/presentation/*"
+      ],
       "@layouts/*": [
-        "src/layouts/*"
+        "src/presentation/layouts/*"
       ],
       "@pages/*": [
-        "src/pages/*"
+        "src/presentation/pages/*"
       ],
       "@components/*": [
-        "src/components/*"
+        "src/presentation/components/*"
       ],
       "@theme/*": [
-        "src/theme/*"
+        "src/presentation/theme/*"
       ]
     }
   },
   "include": [
     "src",
-    "theme"
+    "src/presentation/theme"
   ],
   "references": [
     {

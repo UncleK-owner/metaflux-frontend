@@ -26,13 +26,15 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/react-router-dom": "latest",
+    "axios": "^1.8.4",
     "clsx": "2.1.1",
     "dayjs": "1.11.13",
     "global": "^4.4.0",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

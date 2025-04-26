@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { LoadScript } from '@react-google-maps/api';
 import { Routes } from "react-router";
 import { BrowserRouter, Route } from 'react-router-dom';
-import { HomePage, SignInPage, LandingPage } from './pages';
-import { DashboardPage, MapsPage, TasksPage, TasksUploadPage } from './pages/HomePage/pages';
+import { HomePage, SignInPage, LandingPage } from './presentation/pages';
+import { DashboardPage, MapsPage, TasksPage, TasksUploadPage } from '@presentation/pages/Home/HomePage';
+import NotFoundPage from '@presentation/pages/common/NotFoundPage';
 
 function App() {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY; // 환경 변수에서 API 키 읽기
@@ -20,8 +21,8 @@ function App() {
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="maps" element={<MapsPage />} />
                         <Route path="tasks" element={<TasksPage />} />
-                        <Route path="tasks/upload" element={<TasksUploadPage />} />
                         {/* Add more nested routes here if needed */}
+                        <Route path="*" element={<NotFoundPage />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -8,10 +8,14 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@layouts': '/src/layouts',
-      '@pages': '/src/pages',
-      '@components': '/src/components',
-      '@theme': '/src/theme',
+      '@domain': '/src/domain',
+      '@infrastructure': '/src/infrastructure',
+      '@application': '/src/application',
+      '@presentation': '/src/presentation',
+      '@layouts': '/src/presentation/layouts',
+      '@pages': '/src/presentation/pages',
+      '@components': '/src/presentation/components',
+      '@theme': '/src/presentation/theme',
     },
   },
   base: '/app/',
