@@ -6,66 +6,7 @@ import { MapComponent } from './components/MapComponent';
 import DragAndDropFileUploader from '@components/DragAndDropFileUploader';
 import EditableText from '@presentation/components/EditTableText';
 
-const items = [
-    { id: 1, name: '장소 1', description: '설명 1' },
-    { id: 2, name: '장소 2', description: '설명 2' },
-    { id: 3, name: '장소 3', description: '설명 3' },
-    { id: 4, name: '장소 4', description: '설명 4' },
-    { id: 5, name: '장소 5', description: '설명 5' },
-    { id: 6, name: '장소 6', description: '설명 6' },
-    { id: 7, name: '장소 7', description: '설명 7' },
-    { id: 8, name: '장소 8', description: '설명 8' },
-    { id: 9, name: '장소 9', description: '설명 9' },
-    { id: 10, name: '장소 10', description: '설명 10' },
-    // ... 더 많은 항목
-];
-
-function useMarkers() {
-    const [markers, setMarkers] = useState<MarkerData[]>([]);
-
-    useEffect(() => {
-        async function fetchMarkers() {
-            try {
-                const response = await axios.get('https://starkapin.duckdns.org/webhook/markers');
-
-                const data = response.data
-                    .filter((item: any) => {
-                        if (item.latitude === null || item.longitude === null) {
-                            console.warn(`Skipping marker with id ${item.id} due to null latitude or longitude`);
-                            return false;
-                        }
-                        return true;
-                    })
-                    .map((item: any) => ({
-                        id: item.id,
-                        latitude: item.latitude,
-                        longitude: item.longitude,
-                    }));
-
-                data.forEach((marker: MarkerData) => {
-                    if (marker.latitude === null || marker.longitude === null) {
-                        console.warn(`Skipping marker with id ${marker.id} due to null latitude or longitude`);
-                    } else {
-                        console.log(`Marker ID: ${marker.id}, Latitude: ${marker.latitude}, Longitude: ${marker.longitude}`);
-                    }
-                });
-
-                console.log('Fetched markers:', data);
-                setMarkers(data);
-            } catch (error) {
-                console.error('Error fetching markers:', error);
-            }
-        }
-
-        fetchMarkers();
-    }, []);
-
-    return markers;
-}
-
-
-
-export default function MapsPage(props: { disableCustomTheme?: boolean }) {
+const MapsPage: React.FC = (props: { disableCustomTheme?: boolean }) => {
     const markers = useMarkers();
 
     const headerStyle = {
@@ -129,6 +70,65 @@ export default function MapsPage(props: { disableCustomTheme?: boolean }) {
         </Paper>
 
     </Box>;
+};
 
+export default MapsPage;
 
+const items = [
+    { id: 1, name: '장소 1', description: '설명 1' },
+    { id: 2, name: '장소 2', description: '설명 2' },
+    { id: 3, name: '장소 3', description: '설명 3' },
+    { id: 4, name: '장소 4', description: '설명 4' },
+    { id: 5, name: '장소 5', description: '설명 5' },
+    { id: 6, name: '장소 6', description: '설명 6' },
+    { id: 7, name: '장소 7', description: '설명 7' },
+    { id: 8, name: '장소 8', description: '설명 8' },
+    { id: 9, name: '장소 9', description: '설명 9' },
+    { id: 10, name: '장소 10', description: '설명 10' },
+    // ... 더 많은 항목
+];
+
+function useMarkers() {
+    const [markers, setMarkers] = useState<MarkerData[]>([]);
+
+    useEffect(() => {
+        async function fetchMarkers() {
+            try {
+                const response = await axios.get('https://starkapin.duckdns.org/webhook/markers');
+
+                const data = response.data
+                    .filter((item: any) => {
+                        if (item.latitude === null || item.longitude === null) {
+                            console.warn(`Skipping marker with id ${item.id} due to null latitude or longitude`);
+                            return false;
+                        }
+                        return true;
+                    })
+                    .map((item: any) => ({
+                        id: item.id,
+                        latitude: item.latitude,
+                        longitude: item.longitude,
+                    }));
+
+                data.forEach((marker: MarkerData) => {
+                    if (marker.latitude === null || marker.longitude === null) {
+                        console.warn(`Skipping marker with id ${marker.id} due to null latitude or longitude`);
+                    } else {
+                        console.log(`Marker ID: ${marker.id}, Latitude: ${marker.latitude}, Longitude: ${marker.longitude}`);
+                    }
+                });
+
+                console.log('Fetched markers:', data);
+                setMarkers(data);
+            } catch (error) {
+                console.error('Error fetching markers:', error);
+            }
+        }
+
+        fetchMarkers();
+    }, []);
+
+    return markers;
 }
+
+

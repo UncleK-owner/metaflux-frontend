@@ -6,7 +6,7 @@ import MainGrid from './components/MainGrid';
 import { Box, Stack } from '@mui/material';
 import Header from '@presentation/layouts/components/Header';
 
-export default function DashboardPage(props: { disableCustomTheme?: boolean }) {
+const DashboardPage: React.FC = (props: { disableCustomTheme?: boolean }) => {
     return (
         <Stack
             spacing={2}
@@ -23,7 +23,7 @@ export default function DashboardPage(props: { disableCustomTheme?: boolean }) {
                 <MainGrid />
             </Box>
         </Stack>
-
     );
-
 }
+
+export default DashboardPage; 

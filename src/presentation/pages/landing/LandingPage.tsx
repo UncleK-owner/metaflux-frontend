@@ -12,7 +12,7 @@ import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 
-export default function LandingPage(props: { disableCustomTheme?: boolean }) {
+const LandingPage: React.FC = (props: { disableCustomTheme?: boolean }) => {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -36,3 +36,5 @@ export default function LandingPage(props: { disableCustomTheme?: boolean }) {
     </AppTheme>
   );
 }
+
+export default LandingPage;
