@@ -20,7 +20,7 @@ const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/app/dashboard' },
   { text: 'Analytics', icon: <AnalyticsRoundedIcon />, path: '/app/analytics' },
   { text: 'Clients', icon: <PeopleRoundedIcon />, path: '/app/clients' },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon />, path: '/app/tasks' },
+  { text: 'Address', icon: <AssignmentRoundedIcon />, path: '/app/address' },
   { text: 'Maps', icon: <MapIcon />, path: '/app/maps' },
 ];
 

@@ -1,5 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import Header from '@presentation/layouts/components/Header';
+import JobDataGrid from './components/JobDataGrid';
 
 const AddressJobPage: React.FC = (props: { disableCustomTheme?: boolean }) => {
     return (
@@ -15,6 +16,8 @@ const AddressJobPage: React.FC = (props: { disableCustomTheme?: boolean }) => {
         >
             <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
                 <Header />
+                <Box sx={{ my: 2 }} />
+                <JobDataGrid />
             </Box>
         </Stack>
     );
