@@ -1,10 +1,13 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
+import { DataGrid, GridColDef, GridRowId, GridFilterItem, GridFilterModel } from '@mui/x-data-grid';
+import { Link, useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
+import { RouterPath } from '../../../../routes/RouterPath';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { AddressJobData } from '@domain/entities/AddressJobData';
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
+const columns: GridColDef<Row>[] = [
     { field: 'id', headerName: 'JOB-ID', width: 90 },
     {
         field: 'title',
@@ -33,36 +36,72 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     },
 ];
 
-const rows = [
-    { id: 1, title: '2025-04-30 Route 10-1 배송목록', status: 'waiting', updatedAt: '2025-05-01 15:39:11', createdAt: '2025-04-30 15:11:22' },
-    { id: 2, title: '2025-05-01 Route 12-3 배송목록', status: 'in-progress', updatedAt: '2025-05-02 10:15:45', createdAt: '2025-05-01 09:30:00' },
-    { id: 3, title: '2025-05-02 Route 15-7 배송목록', status: 'completed', updatedAt: '2025-05-02 18:45:22', createdAt: '2025-05-02 08:20:10' },
-    { id: 4, title: '2025-05-03 Route 8-2 배송목록', status: 'waiting', updatedAt: '2025-05-03 14:12:33', createdAt: '2025-05-03 07:50:00' },
-    { id: 5, title: '2025-05-04 Route 20-5 배송목록', status: 'in-progress', updatedAt: '2025-05-04 16:30:00', createdAt: '2025-05-04 09:00:00' },
-    { id: 6, title: '2025-05-05 Route 3-9 배송목록', status: 'completed', updatedAt: '2025-05-05 19:00:00', createdAt: '2025-05-05 08:45:00' },
-    { id: 7, title: '2025-05-06 Route 14-4 배송목록', status: 'waiting', updatedAt: '2025-05-06 12:00:00', createdAt: '2025-05-06 07:30:00' },
-    { id: 8, title: '2025-05-07 Route 6-1 배송목록', status: 'in-progress', updatedAt: '2025-05-07 15:45:00', createdAt: '2025-05-07 08:00:00' },
-    { id: 9, title: '2025-05-08 Route 18-8 배송목록', status: 'completed', updatedAt: '2025-05-08 20:30:00', createdAt: '2025-05-08 09:15:00' },
-    { id: 10, title: '2025-05-09 Route 11-6 배송목록', status: 'waiting', updatedAt: '2025-05-09 13:00:00', createdAt: '2025-05-09 07:45:00' },
-    { id: 11, title: '2025-05-10 Route 9-3 배송목록', status: 'in-progress', updatedAt: '2025-05-10 17:15:00', createdAt: '2025-05-10 08:30:00' },
-];
+interface Row {
+    id: string;
+    title: string;
+    status: string;
+    updatedAt: string;
+    createdAt: string;
+}
 
-export default function JobDataGrid() {
+const getFilterItem = (field: string, value: string): GridFilterItem => {
+    return {
+        id: 0,
+        field,
+        operator: 'contains',
+        value
+    }
+};
+
+const getFilterModel = (value: string): GridFilterModel => ({
+    items: ['id', 'title', 'status', 'updatedAt', 'createdAt'].map(field => getFilterItem(field, value))
+});
+
+interface JobDataGridProps {
+    addressJobs: AddressJobData[];
+    rowLink?: (id: GridRowId) => { pathname: string };
+}
+
+export default function JobDataGrid({ addressJobs, rowLink }: JobDataGridProps) {
+    const navigate = useNavigate();
+
+    const [searchTerm, setSearchTerm] = React.useState<string>('');
+    const [isFilterMode, setIsFilterMode] = React.useState(false);
+    const filterModel: GridFilterModel = isFilterMode && searchTerm.length > 0 ? getFilterModel(searchTerm) : { items: [] };
+    const toggleFilterMode = () => {
+        setIsFilterMode(!isFilterMode);
+        setSearchTerm('');
+    };
+
     return (
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ p: 2, textAlign: 'right' }}>
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => { }} // 빈 함수 호출
-                    sx={{ mb: 2 }} // DataGrid 위에 여백 추가
-                >
-                    데이터 추가
-                </Button>
+            <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                {isFilterMode && <TextField
+                    label="검색"
+                    variant="outlined"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    sx={{ mr: 2 }}
+                />}
+                <Box sx={{ display: 'flex', gap: 1 }}>                    
+                    <Button
+                        variant="contained"
+                        startIcon={<FilterAltIcon />}
+                        sx={{ mb: 2 }}
+                        onClick={toggleFilterMode}
+                    >                        
+                        Filter
+                    </Button>
+                    <Link to={RouterPath.ADDRESS_CREATE}> 
+
+                        <Button variant="contained" startIcon={<AddIcon />} sx={{ mb: 2 }}>데이터 추가</Button>                                      
+                    </Link>
+                </Box>
             </Box>
             <Box sx={{ flex: 1, height: 'auto' }}>
                 <DataGrid
-                    rows={rows}
+                    filterMode="server"
+                    filterModel={filterModel}
                     columns={columns}
                     initialState={{
                         pagination: {
@@ -100,11 +139,12 @@ export default function JobDataGrid() {
                         },
                     }}
                     onRowClick={(params) => {
-                        const selectedRowId = params.id;
-                        // Replace with your navigation logic
-                        console.log(`Navigate to details of row with ID: ${selectedRowId}`);
-                    }}
+                        if (rowLink) {                            
+                            navigate(rowLink(params.id.toString()));
+                        }
+                    }}                    
                     slots={{
+                        
                         toolbar: () => null,
                     }}
                 />

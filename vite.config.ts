@@ -18,9 +18,15 @@ export default defineConfig({
       '@theme': '/src/presentation/theme',
     },
   },
+  optimizeDeps: {
+    exclude: ['xlsx'],
+  },
+  build: {
+    commonjsOptions: { include: [/xlsx/, /node_modules/] },
+  },
   base: '/app/',
   server: {
     allowedHosts: true,
     host: true,
   },
-}); 
+});
