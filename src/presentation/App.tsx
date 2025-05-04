@@ -1,16 +1,16 @@
 import { LoadScript } from '@react-google-maps/api';
 import { Routes } from 'react-router';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { HomePage, SignInPage, LandingPage } from './presentation/pages';
-import { DashboardPage, MapsPage, AddressJobPage, AddressJobDetailPage, AddressJobCreateUpdatePage } from './presentation/pages/home';
-import { NotFoundPage } from './presentation/pages/common';
-import PricingPage from './presentation/pages/landing/pricing/PricingPage';
-import { RouterPath } from './presentation/routes/RouterPath';
+import { HomePage, SignInPage, LandingPage, NotFoundPage } from '@presentation/pages';
+import { DashboardPage, MapsPage, AddressJobPage, AddressJobDetailPage, AddressJobCreateUpdatePage } from '@presentation/pages/home';
+import PricingPage from '@presentation/pages/landing/pricing/PricingPage';
+import { RouterPath } from '@presentation/routes/RouterPath';
+import { useExternalConfig } from '../app';
 
-const App: React.FC = (props: { disableCustomTheme?: boolean }) => {
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY; // 환경 변수에서 API 키 읽기
+const App: React.FC = () => {
+    const { googleMapsApiKey } = useExternalConfig();
     return (
-        <LoadScript googleMapsApiKey={apiKey}>
+        <LoadScript googleMapsApiKey={googleMapsApiKey}>
             <BrowserRouter>
                 <Routes>
                     <Route path={RouterPath.LANDING} element={<LandingPage />} />

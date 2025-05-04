@@ -15,12 +15,13 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import MapIcon from '@mui/icons-material/Map';
 import { useNavigate, useLocation } from 'react-router-dom';
 import path from 'path';
+import { RouterPath } from '@presentation/routes/RouterPath';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon />, path: '/app/dashboard' },
+  { text: 'Home', icon: <HomeRoundedIcon />, path: RouterPath.DASHBOARD_INDEX },
   { text: 'Analytics', icon: <AnalyticsRoundedIcon />, path: '/app/analytics' },
   { text: 'Clients', icon: <PeopleRoundedIcon />, path: '/app/clients' },
-  { text: 'Address', icon: <AssignmentRoundedIcon />, path: '/app/address' },
+  { text: 'Address', icon: <AssignmentRoundedIcon />, path: RouterPath.ADDRESS_INDEX },
   { text: 'Maps', icon: <MapIcon />, path: '/app/maps' },
 ];
 

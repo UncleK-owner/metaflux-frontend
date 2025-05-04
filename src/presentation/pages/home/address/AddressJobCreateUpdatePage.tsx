@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   TextField,
@@ -11,32 +11,32 @@ import {
   InputLabel,
   SelectChangeEvent,
 } from '@mui/material';
-import { AddressJobData } from '../../../../domain/entities/AddressJobData';
+import { AddressJobData } from '@domain/entities/AddressJobData';
+import { useParams } from 'react-router-dom';
 
 const AddressJobCreateUpdatePage: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [addressJob, setAddressJob] = useState<AddressJobData>({
-    id: '',
     title: '',
     description: '',
-    status: 'To Do'
+    status: 'To Do',
+    createdAt: new Date(),
+    updatedAt: new Date()
   });
-
-  const saveAddressJob = async () => {
-    console.log('Saving address job:', addressJob);
-    // Simulate a server call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  };
+  
+  useEffect(() => {
+    if (id) {
+      setAddressJob(prev => ({ ...prev, id }));
+    }
+  }, [id]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await saveAddressJob();
     navigate(-1);
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent) => {
     const { name, value } = event.target;
     setAddressJob(prev => ({
       ...prev,
@@ -46,62 +46,41 @@ const AddressJobCreateUpdatePage: React.FC = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      {/* <Grid container spacing={2}>
-        <Grid size={8}>
-          <Grid container alignItems="center">
-            <Grid item xs={6}>
-              <Typography variant="h4">Create Address Job</Typography>
-            </Grid>
-            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button color="secondary" onClick={() => navigate(-1)}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="contained" color="primary">
-                Save
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+      <Grid container spacing={2}>
+
+        <Typography variant="h4">Create Address Job</Typography>
+        <Button color="secondary" onClick={() => navigate(-1)}>
+          Cancel
+        </Button>
+        <Button type="submit" variant="contained" color="primary">
+          Save
+        </Button>
 
 
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Job Name"
-            name="jobName"
-            value={addressJob.jobName}
+
+        <TextField
+          fullWidth
+          label="Title"
+          name="title"
+          value={addressJob.title}
+        />
+
+        <FormControl fullWidth>
+          <InputLabel id="status-label">Status</InputLabel>
+          <Select
+            labelId="status-label"
+            id="status"
+            name="status"
+            value={addressJob.status || 'To Do'}
+            label="Status"
             onChange={handleChange}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Description"
-            name="description"
-            value={addressJob.description}
-            onChange={handleChange}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <FormControl fullWidth>
-            <InputLabel id="status-label">Status</InputLabel>
-            <Select
-              labelId="status-label"
-              id="status"
-              name="status"
-              value={addressJob.status}
-              label="Status"
-              onChange={handleChange}
-            >
-              <MenuItem value="To Do">To Do</MenuItem>
-              <MenuItem value="In Progress">In Progress</MenuItem>
-              <MenuItem value="Done">Done</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid> */}
+          >
+            <MenuItem value="To Do">To Do</MenuItem>
+            <MenuItem value="In Progress">In Progress</MenuItem>
+            <MenuItem value="Done">Done</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
     </form>
   );
 };

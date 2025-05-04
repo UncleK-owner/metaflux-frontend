@@ -1,10 +1,15 @@
-import { DateTimeFieldOwnerState } from "@mui/x-date-pickers/DateTimeField/DateTimeField.types";
-
-export interface AddressJobData {
-  id?: string;
+export class AddressJobData {
+  id: string;
   title: string;
   description: string;
-  status: string;
-  updatedAt?: Date;
-  createdAt?: Date;
+  createdAt: Date; 
+  updatedAt: Date; 
+
+  constructor(id: string, title: string, description: string, createdAt: string, updatedAt: string) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.createdAt = new Date(createdAt);
+    this.updatedAt = new Date(updatedAt);
+  }
 }
