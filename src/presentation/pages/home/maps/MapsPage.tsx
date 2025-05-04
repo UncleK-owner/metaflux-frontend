@@ -1,10 +1,10 @@
 import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MarkerData } from 'src/domain/entities/MarkerData';
 import { MapComponent } from './components/MapComponent';
 import DragAndDropFileUploader from '@components/DragAndDropFileUploader';
 import EditableText from '@presentation/components/EditTableText';
+import { MarkerData } from '@domain/index';
 
 const MapsPage: React.FC = (props: { disableCustomTheme?: boolean }) => {
     const markers = useMarkers();
