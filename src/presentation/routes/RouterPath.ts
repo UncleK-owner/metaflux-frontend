@@ -8,6 +8,7 @@ export class RouterPath {
   static readonly DASHBOARD_INDEX = `${RouterPath.ROOT_APP}dashboard`;
   static readonly MAPS_INDEX = `${RouterPath.ROOT_APP}maps`;
   static readonly SIGN_IN = '/signin';
+  static readonly ADDRESS_RECIPIENTS = `${RouterPath.ROOT_APP}/address/recipients`;
   static readonly PRICING = '/pricing';
   static readonly LANDING = '/landing';
   static readonly HOME = '/app';

@@ -5,6 +5,7 @@ import { HomePage, SignInPage, LandingPage, NotFoundPage } from '@presentation/p
 import { DashboardPage, MapsPage, AddressJobPage, AddressJobDetailPage, AddressJobCreateUpdatePage } from '@presentation/pages/home';
 import PricingPage from '@presentation/pages/landing/pricing/PricingPage';
 import { RouterPath } from '@presentation/routes/RouterPath';
+import RecipientsPage from '@presentation/pages/home/address/RecipientsPage';
 import { useExternalConfig } from '../app';
 
 const App: React.FC = () => {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
                         <Route path={RouterPath.ADDRESS_CREATE} element={<AddressJobCreateUpdatePage />} />
                         <Route path={RouterPath.ADDRESS_EDIT} element={<AddressJobCreateUpdatePage />} />
                         <Route path={RouterPath.ADDRESS_DETAIL} element={<AddressJobDetailPage />} />
+                        <Route path={RouterPath.ADDRESS_RECIPIENTS} element={<RecipientsPage />} />
 
                         {/* Add more nested routes here if needed */}
                         <Route path="*" element={<NotFoundPage />} />

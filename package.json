@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "test": "jest",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "dayjs": "1.11.13",
     "exceljs": "^4.4.0",
     "global": "^4.4.0",
+    "jest-mock": "^30.0.0",
     "react": "latest",
     "react-dom": "latest",
     "react-redux": "^9.2.0",
@@ -41,13 +43,18 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-typescript": "^7.27.1",
     "@types/exceljs": "^0.5.3",
-    "@types/node": "^22.14.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^24.0.1",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/react-router-dom": "latest",
     "@types/xlsx": "^0.0.35",
     "@vitejs/plugin-react": "latest",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.4.0",
     "typescript": "latest",
     "vite": "^6.3.4",
     "vite-plugin-compression": "^0.5.1"

@@ -29,5 +29,12 @@ export default defineConfig({
   server: {
     allowedHosts: true,
     host: true,
+    proxy: {
+      '/api': {
+        target: 'https://starkapin.duckdns.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
 });

@@ -1,5 +1,5 @@
-import { Box, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Stack, Typography, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import Header from '@presentation/layouts/components/Header';
 import JobDataGrid from './components/JobDataGrid';
 import { AddressJobData } from '@domain/entities/AddressJobData';
@@ -39,16 +39,22 @@ const AddressJobPage: React.FC = () => {
             <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
                 <Header />
                 {addressJobs.length > 0 ? (
-                    <JobDataGrid 
-                        addressJobs={addressJobs}
-                        onRowClick={(id: GridRowId) => {
-                            navigate(RouterPath.ADDRESS_DETAIL.replace(":id", id.toString()));
-                        }}
-                    />
+                    <React.Fragment>
+                        <Button variant="contained" onClick={() => navigate(RouterPath.ADDRESS_RECIPIENTS)} sx={{ my: 2 }}>
+                            View Recipients
+                        </Button>
+                        <JobDataGrid
+                            addressJobs={addressJobs}
+
+                            onRowClick={(id: GridRowId) => {
+                                navigate(RouterPath.ADDRESS_DETAIL.replace(":id", id.toString()));
+                            }}
+                        />
+                    </React.Fragment>
                 ) : (
                     <Typography>Loading</Typography>
                 )}
-            </Box>
+            </Box> {/* Corrected closing tag position */}
         </Stack>
     );
 };
