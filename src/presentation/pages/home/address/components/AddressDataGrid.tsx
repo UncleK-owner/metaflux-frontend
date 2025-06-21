@@ -3,22 +3,22 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { AddressData } from '@domain/entities/AddressData';
 
 interface AddressDataGridProps {
-  address: AddressData[];
+  addresses: AddressData[];
 }
 
-const AddressDataGrid: React.FC<AddressDataGridProps> = ({ address }) => {
+const AddressDataGrid: React.FC<AddressDataGridProps> = ({ addresses }) => {
   const columns: GridColDef[] = [
-    { field: 'userName', headerName: 'User Name', width: 150 },
-    { field: 'address1', headerName: 'Address 1', width: 250 },
-    { field: 'address2', headerName: 'Address 2', width: 250 },
-    { field: 'postalCode', headerName: 'Postal Code', width: 150 },
-    { field: 'isRefined', headerName: 'Refined', width: 100, type: 'boolean' },
+    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'street', headerName: 'Street', width: 250 },
+    { field: 'city', headerName: 'City', width: 150 },
+    { field: 'state', headerName: 'State', width: 100 },
+    { field: 'zip', headerName: 'Zip Code', width: 150 },
   ];
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={address.map((detail) => ({ ...detail, id: detail.id }))}
+        rows={addresses.map((address) => ({ ...address, id: address.id }))}
         columns={columns}
         pageSizeOptions={[5, 10, 25]}
         checkboxSelection

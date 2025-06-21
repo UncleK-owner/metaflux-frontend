@@ -2,7 +2,7 @@ import { LoadScript } from '@react-google-maps/api';
 import { Routes } from 'react-router';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { HomePage, SignInPage, LandingPage, NotFoundPage } from '@presentation/pages';
-import { DashboardPage, MapsPage, AddressJobPage, AddressJobDetailPage, AddressJobCreateUpdatePage } from '@presentation/pages/home';
+import { DashboardPage, MapsPage, AddressJobPage, AddressJobDetailPage, AddressJobCreateUpdatePage, UnrefinedAddressPage, RefinedAddressPage } from '@presentation/pages/home';
 import PricingPage from '@presentation/pages/landing/pricing/PricingPage';
 import { RouterPath } from '@presentation/routes/RouterPath';
 import RecipientsPage from '@presentation/pages/home/address/RecipientsPage';
@@ -26,6 +26,8 @@ const App: React.FC = () => {
                         <Route path={RouterPath.ADDRESS_EDIT} element={<AddressJobCreateUpdatePage />} />
                         <Route path={RouterPath.ADDRESS_DETAIL} element={<AddressJobDetailPage />} />
                         <Route path={RouterPath.ADDRESS_RECIPIENTS} element={<RecipientsPage />} />
+                        <Route path={RouterPath.UNREFINED_ADDRESS} element={<UnrefinedAddressPage />} />
+                        <Route path={RouterPath.REFINED_ADDRESS} element={<RefinedAddressPage />} />
 
                         {/* Add more nested routes here if needed */}
                         <Route path="*" element={<NotFoundPage />} />

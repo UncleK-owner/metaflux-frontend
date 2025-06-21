@@ -6,9 +6,12 @@ export class RouterPath {
   static readonly ADDRESS_INDEX = `${RouterPath.ROOT_APP}/address/job`;
   static readonly ADDRESS_DETAIL = `${RouterPath.ROOT_APP}/address/job/detail/:id`; // Changed to use ROOT_APP
   static readonly DASHBOARD_INDEX = `${RouterPath.ROOT_APP}dashboard`;
+  
   static readonly MAPS_INDEX = `${RouterPath.ROOT_APP}maps`;
   static readonly SIGN_IN = '/signin';
   static readonly ADDRESS_RECIPIENTS = `${RouterPath.ROOT_APP}/address/recipients`;
+  static readonly UNREFINED_ADDRESS = `${RouterPath.ROOT_APP}/address/unrefined`;
+  static readonly REFINED_ADDRESS = `${RouterPath.ROOT_APP}/address/refined`;
   static readonly PRICING = '/pricing';
   static readonly LANDING = '/landing';
   static readonly HOME = '/app';

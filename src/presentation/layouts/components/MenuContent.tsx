@@ -24,6 +24,8 @@ const mainListItems = [
   { text: 'Address', icon: <AssignmentRoundedIcon />, path: RouterPath.ADDRESS_INDEX },
   { text: 'Maps', icon: <MapIcon />, path: '/app/maps' },
   { text: 'Recipients', icon: <PeopleRoundedIcon />, path: RouterPath.ADDRESS_RECIPIENTS },
+  { text: 'Unrefined Address', icon: <AssignmentRoundedIcon />, path: RouterPath.UNREFINED_ADDRESS },
+  { text: 'Refined Address', icon: <AssignmentRoundedIcon />, path: RouterPath.REFINED_ADDRESS },
 ];
 
 const secondaryListItems = [
