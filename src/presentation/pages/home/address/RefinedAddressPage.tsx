@@ -4,11 +4,20 @@ import { AddressDataGrid } from '@presentation/pages/home/address/components';
 import { GetAllAddressesUseCaseImpl } from '../../../../data/useCases/GetAllAddressesUseCaseImpl';
 import { AddressRepositoryImpl } from '../../../../data/repositories/AddressRepositoryImpl';
 import { AddressRemoteDataSource } from '../../../../data/datasources/api/AddressRemoteDataSource';
+import { useExternalConfig } from '../../../../app/contexts/ExternalConfigContext';
+import { httpProvider } from '../../../../data/providers/AxiosHttpProvider';
 
 const RefinedAddressPage: React.FC = () => {
   const [addresses, setAddresses] = useState<AddressData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { authToken } = useExternalConfig();
+
+  useEffect(() => {
+    if (authToken) {
+      httpProvider.setAuthToken('directus', authToken);
+    }
+  }, [authToken]);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -27,8 +36,10 @@ const RefinedAddressPage: React.FC = () => {
       }
     };
 
-    fetchAddresses();
-  }, []);
+    if (authToken) {
+      fetchAddresses();
+    }
+  }, [authToken]);
 
   if (loading) {
     return <div>Loading addresses...</div>;

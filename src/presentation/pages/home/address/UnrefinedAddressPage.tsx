@@ -4,11 +4,20 @@ import { UnrefinedAddressDataGrid } from '@presentation/pages/home/address/compo
 import { GetAllUnrefinedAddressesUseCaseImpl } from '../../../../data/useCases/GetAllUnrefinedAddressesUseCaseImpl';
 import { UnrefinedAddressRepositoryImpl } from '../../../../data/repositories/UnrefinedAddressRepositoryImpl';
 import { UnrefinedAddressRemoteDataSource } from '../../../../data/datasources/api/UnrefinedAddressRemoteDataSource';
+import { useExternalConfig } from '../../../../app/contexts/ExternalConfigContext';
+import { httpProvider } from '../../../../data/providers/AxiosHttpProvider';
 
 const UnrefinedAddressPage: React.FC = () => {
   const [unrefinedAddresses, setUnrefinedAddresses] = useState<UnrefinedAddressData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { authToken } = useExternalConfig();
+
+  useEffect(() => {
+    if (authToken) {
+      httpProvider.setAuthToken('directus', authToken);
+    }
+  }, [authToken]);
 
   useEffect(() => {
     const fetchUnrefinedAddresses = async () => {
@@ -27,8 +36,10 @@ const UnrefinedAddressPage: React.FC = () => {
       }
     };
 
-    fetchUnrefinedAddresses();
-  }, []);
+    if (authToken) {
+      fetchUnrefinedAddresses();
+    }
+  }, [authToken]);
 
   if (loading) {
     return <div>Loading unrefined addresses...</div>;

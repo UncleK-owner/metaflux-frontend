@@ -25,11 +25,12 @@ export interface UnrefinedAddressDataGridProps {
 }
 
 export default function UnrefinedAddressDataGrid({ unrefinedAddresses, onRowClick }: UnrefinedAddressDataGridProps) {
+    const rows = unrefinedAddresses?.map((address) => ({ ...address, id: address.id })) || [];
     return (
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ flex: 1, height: 'auto', width: '100%' }}>
                 <DataGrid
-                    rows={unrefinedAddresses}
+                    rows={rows}
                     columns={columns}
                     initialState={{
                         pagination: {

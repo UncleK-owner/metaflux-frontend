@@ -15,10 +15,13 @@ const AddressDataGrid: React.FC<AddressDataGridProps> = ({ addresses }) => {
     { field: 'zip', headerName: 'Zip Code', width: 150 },
   ];
 
+  // The ?. operator is used here to safely access the `data` property, which may not exist if the request fails.
+  const rows = addresses?.map((address) => ({ ...address, id: address.id })) || [];
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={addresses.map((address) => ({ ...address, id: address.id }))}
+        rows={rows}
         columns={columns}
         pageSizeOptions={[5, 10, 25]}
         checkboxSelection

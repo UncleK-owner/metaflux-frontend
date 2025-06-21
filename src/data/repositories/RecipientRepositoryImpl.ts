@@ -1,15 +1,11 @@
 import { RecipientRepository } from '../../domain/repositories/RecipientRepository';
 import { Recipient } from '../../domain/entities/RecipientData';
-
-// Assume RecipientApiDataSource interface exists or define a placeholder
-interface RecipientApiDataSource {
-  fetchRecipients(): Promise<Recipient[]>;
-}
+import { RecipientRemoteDataSource } from '../datasources/api/RecipientRemoteDataSource';
 
 export class RecipientRepositoryImpl implements RecipientRepository {
-  private apiDataSource: RecipientApiDataSource;
+  private apiDataSource: RecipientRemoteDataSource;
 
-  constructor(apiDataSource: RecipientApiDataSource) {
+  constructor(apiDataSource: RecipientRemoteDataSource) {
     this.apiDataSource = apiDataSource;
   }
 

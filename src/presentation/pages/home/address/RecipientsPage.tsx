@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Recipient } from '../../../../domain/entities/RecipientData';
-import { GetAllRecipientsUseCaseImpl } from '../../../../data/useCases/GetAllRecipientsUseCaseImpl'; // Import Use Case Implementation
-import { RecipientRepositoryImpl } from '../../../../data/repositories/RecipientRepositoryImpl'; // Keep Repository Import
-import { RecipientRemoteDataSource } from '../../../../data/datasources/api/RecipientRemoteDataSource'; // Keep Data Source Import
+import { GetAllRecipientsUseCaseImpl } from '../../../../data/useCases/GetAllRecipientsUseCaseImpl';
+import { RecipientRepositoryImpl } from '../../../../data/repositories/RecipientRepositoryImpl';
+import { RecipientRemoteDataSource } from '../../../../data/datasources/api/RecipientRemoteDataSource';
+import { useExternalConfig } from '../../../../app/contexts/ExternalConfigContext';
+import { httpProvider } from '../../../../data/providers/AxiosHttpProvider';
 
 const RecipientsPage: React.FC = () => {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { authToken } = useExternalConfig();
+
+  useEffect(() => {
+    if (authToken) {
+      httpProvider.setAuthToken('directus', authToken);
+    }
+  }, [authToken]);
 
   useEffect(() => {
     const fetchRecipients = async () => {
       try {
         setLoading(true);
-        const apiDataSource = new RecipientRemoteDataSource(); // Consider using Dependency Injection
+        const apiDataSource = new RecipientRemoteDataSource();
         const repository = new RecipientRepositoryImpl(apiDataSource);
-        const useCase = new GetAllRecipientsUseCaseImpl(repository); // Instantiate Use Case
+        const useCase = new GetAllRecipientsUseCaseImpl(repository);
         const data = await useCase.execute();
         setRecipients(data);
       } catch (err: any) {
@@ -26,8 +35,10 @@ const RecipientsPage: React.FC = () => {
       }
     };
 
-    fetchRecipients();
-  }, []);
+    if (authToken) {
+      fetchRecipients();
+    }
+  }, [authToken]);
 
   if (loading) {
     return <div>Loading recipients...</div>;

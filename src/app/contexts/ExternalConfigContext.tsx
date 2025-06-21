@@ -4,6 +4,7 @@ import React, { createContext, useContext } from 'react';
 interface ExternalConfig {
   googleMapsApiKey: string;
   metaFluxUrl: string;
+  authToken: string;
   // 다른 API 키도 추가 가능
 }
 
@@ -13,6 +14,7 @@ export const ExternalConfigProvider: React.FC<{ children: React.ReactNode }> = (
   const config: ExternalConfig = {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     metaFluxUrl: import.meta.env.META_FLUX_URL,
+    authToken: import.meta.env.VITE_AUTH_TOKEN,
   };
 
   return (

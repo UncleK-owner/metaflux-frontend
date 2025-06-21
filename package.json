@@ -28,7 +28,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/react-router-dom": "latest",
-    "axios": "^1.8.4",
+    "axios": "^1.10.0",
     "clsx": "2.1.1",
     "dayjs": "1.11.13",
     "exceljs": "^4.4.0",
