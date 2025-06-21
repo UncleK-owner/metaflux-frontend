@@ -1,16 +1,14 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-type BaseURLNames = 'directus' | 'n8n' |'anotherApi';
+type BaseURLNames = 'directus' | 'anotherApi';
 
 const baseUrls: Record<BaseURLNames, string> = {
-  directus: 'https://starkapin.duckdns.org/directus',
-  n8n: 'https://starkapin.duckdns.org',
-  anotherApi: 'https://api.another.com', // Example of another base URL
+  directus: 'https://starkapin.duckdns.org/directus', // Corrected Base URL
+  anotherApi: 'https://api.another.com',
 };
 
 const axiosInstances: Record<BaseURLNames, AxiosInstance> = {
   directus: axios.create({ baseURL: baseUrls.directus }),
-  n8n: axios.create({ baseURL: baseUrls.n8n }),
   anotherApi: axios.create({ baseURL: baseUrls.anotherApi }),
 };
 
@@ -18,18 +16,13 @@ const setAuthToken = (instanceName: BaseURLNames, token: string) => {
   axiosInstances[instanceName].defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
-async function request<T>(instanceName: BaseURLNames, config: AxiosRequestConfig): Promise<T> {
+async function request<T>(instanceName: BaseURLNames, config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
   try {
     const response: AxiosResponse<T> = await axiosInstances[instanceName](config);
-    // Directus wraps responses in a 'data' object. We extract it here.
-    // This is now more specific to the 'directus' instance.
-    if (instanceName === 'directus' && response.data && (response.data as any).data) {
-        return (response.data as any).data;
-    }
-    return response.data;
+    return response;
   } catch (error) {
-    // You can add more robust error handling here
     console.error('Axios request error:', error);
+    // Consider more specific error handling based on status codes
     throw error;
   }
 }

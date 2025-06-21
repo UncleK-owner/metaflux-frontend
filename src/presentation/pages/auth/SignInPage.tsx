@@ -11,13 +11,17 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import MuiCard from '@mui/material/Card';
+import { Card as MuiCard } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../../theme/AppTheme';
 import ColorModeSelect from '../../theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
 import { useNavigate } from 'react-router-dom';
+import { LoginUseCaseImpl } from '@data/useCases/LoginUseCaseImpl';
+import { AuthRepositoryImpl } from '@data/repositories/AuthRepositoryImpl';
+import { AuthRemoteDataSource } from '@data/datasources/api/AuthRemoteDataSource';
+import { RouterPath } from '@presentation/routes/RouterPath';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -63,11 +67,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const navigate = useNavigate();
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [emailError, setEmailError] = React.useState('');
+    const [passwordError, setPasswordError] = React.useState('');
     const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState<string | null>(null);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -77,46 +83,47 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         setOpen(false);
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (emailError || passwordError) {
-            event.preventDefault();
-            return;
+    const validateInputs = () => {
+        let isValid = true;
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            setEmailError('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError('');
         }
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-
-        navigate('/app/dashboard');
+        if (!password) {
+            setPasswordError('Password cannot be empty.');
+            isValid = false;
+        } else {
+            setPasswordError('');
+        }
+        return isValid;
     };
 
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-
-        let isValid = true;
-
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-            setEmailError(true);
-            setEmailErrorMessage('Please enter a valid email address.');
-            isValid = false;
-        } else {
-            setEmailError(false);
-            setEmailErrorMessage('');
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!validateInputs()) {
+            return;
         }
 
-        if (!password.value || password.value.length < 6) {
-            setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
-            isValid = false;
-        } else {
-            setPasswordError(false);
-            setPasswordErrorMessage('');
-        }
+        setLoading(true);
+        setError(null);
 
-        return isValid;
+        const authDataSource = new AuthRemoteDataSource();
+        const authRepository = new AuthRepositoryImpl(authDataSource);
+        const loginUseCase = new LoginUseCaseImpl(authRepository);
+
+        try {
+            const { accessToken, refreshToken } = await loginUseCase.execute(email, password);
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            navigate(RouterPath.HOME_INDEX);
+        } catch (err: any) {
+            setError('Login failed. Please check your credentials.');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -147,8 +154,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                         <FormControl>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <TextField
-                                error={emailError}
-                                helperText={emailErrorMessage}
+                                error={!!emailError}
+                                helperText={emailError}
                                 id="email"
                                 type="email"
                                 name="email"
@@ -158,24 +165,25 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                                 required
                                 fullWidth
                                 variant="outlined"
-                                color={emailError ? 'error' : 'primary'}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </FormControl>
                         <FormControl>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <TextField
-                                error={passwordError}
-                                helperText={passwordErrorMessage}
+                                error={!!passwordError}
+                                helperText={passwordError}
                                 name="password"
                                 placeholder="••••••"
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                autoFocus
                                 required
                                 fullWidth
                                 variant="outlined"
-                                color={passwordError ? 'error' : 'primary'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </FormControl>
                         <FormControlLabel
@@ -187,10 +195,15 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            onClick={validateInputs}
+                            disabled={loading}
                         >
-                            Sign in
+                            {loading ? 'Signing in...' : 'Sign in'}
                         </Button>
+                        {error && (
+                            <Typography color="error" sx={{ textAlign: 'center', mt: 1 }}>
+                                {error}
+                            </Typography>
+                        )}
                         <Link
                             component="button"
                             type="button"
