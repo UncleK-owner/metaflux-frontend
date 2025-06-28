@@ -4,45 +4,34 @@ import { UnrefinedAddressDataGrid } from '@presentation/pages/home/address/compo
 import { GetAllUnrefinedAddressesUseCaseImpl } from '../../../../data/useCases/GetAllUnrefinedAddressesUseCaseImpl';
 import { UnrefinedAddressRepositoryImpl } from '../../../../data/repositories/UnrefinedAddressRepositoryImpl';
 import { UnrefinedAddressRemoteDataSource } from '../../../../data/datasources/api/UnrefinedAddressRemoteDataSource';
-import { useExternalConfig } from '../../../../app/contexts/ExternalConfigContext';
-import { httpProvider } from '../../../../data/providers/AxiosHttpProvider';
 
 const UnrefinedAddressPage: React.FC = () => {
   const [unrefinedAddresses, setUnrefinedAddresses] = useState<UnrefinedAddressData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { authToken } = useExternalConfig();
 
   useEffect(() => {
-    if (authToken) {
-      httpProvider.setAuthToken('directus', authToken);
-    }
-  }, [authToken]);
-
-  useEffect(() => {
-    const fetchUnrefinedAddresses = async () => {
+    const fetchStandardizedAddresses = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const apiDataSource = new UnrefinedAddressRemoteDataSource();
-        const repository = new UnrefinedAddressRepositoryImpl(apiDataSource);
-        const useCase = new GetAllUnrefinedAddressesUseCaseImpl(repository);
-        const data = await useCase.execute();
+        const remoteDataSource = new UnrefinedAddressRemoteDataSource();
+        const repository = new UnrefinedAddressRepositoryImpl(remoteDataSource);
+        const getAllUseCase = new GetAllUnrefinedAddressesUseCaseImpl(repository);
+        const data = await getAllUseCase.execute();
         setUnrefinedAddresses(data);
       } catch (err: any) {
-        setError(err.message);
-        console.error("Error fetching unrefined addresses in component:", err);
+        setError(err.message || 'An unknown error occurred.');
+        console.error("Error fetching standardized addresses:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (authToken) {
-      fetchUnrefinedAddresses();
-    }
-  }, [authToken]);
+    fetchStandardizedAddresses();
+  }, []);
 
   if (loading) {
-    return <div>Loading unrefined addresses...</div>;
+    return <div>Loading standardized addresses...</div>;
   }
 
   if (error) {
@@ -51,7 +40,7 @@ const UnrefinedAddressPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Unrefined Address List</h1>
+      <h1>Standardized Address List</h1>
       <div style={{ height: 600, width: '100%' }}>
         <UnrefinedAddressDataGrid unrefinedAddresses={unrefinedAddresses} />
       </div>

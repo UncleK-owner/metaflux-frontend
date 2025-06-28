@@ -4,7 +4,7 @@ import { RefreshTokenUseCase } from '@domain/useCases/RefreshTokenUseCase';
 export class RefreshTokenUseCaseImpl implements RefreshTokenUseCase {
   constructor(private readonly authRepository: AuthRepository) {}
 
-  async execute(refreshToken: string): Promise<{ accessToken: string, expires: number }> {
+  async execute(refreshToken: string): Promise<{ accessToken: string, expires: number, refreshToken: string }> {
     return this.authRepository.refreshToken(refreshToken);
   }
 }

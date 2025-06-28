@@ -1,53 +1,86 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { GetCurrentUserUseCaseImpl } from '@data/useCases/GetCurrentUserUseCaseImpl';
+import { RefreshTokenUseCaseImpl } from '@data/useCases/RefreshTokenUseCaseImpl';
 import { AuthRepositoryImpl } from '@data/repositories/AuthRepositoryImpl';
 import { AuthRemoteDataSource } from '@data/datasources/api/AuthRemoteDataSource';
 import { User } from '@domain/entities/User';
 import { RouterPath } from '@presentation/routes/RouterPath';
 import { httpProvider } from '@data/providers/AxiosHttpProvider';
 
+const authDataSource = new AuthRemoteDataSource();
+const authRepository = new AuthRepositoryImpl(authDataSource);
+const getCurrentUserUseCase = new GetCurrentUserUseCaseImpl(authRepository);
+const refreshTokenUseCase = new RefreshTokenUseCaseImpl(authRepository);
+
 const ProtectedRoute: React.FC = () => {
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
-    const checkUserSession = async () => {
+    const handleSession = async (): Promise<User | null> => {
       const accessToken = localStorage.getItem('accessToken');
-
       if (!accessToken) {
-        setUser(null); // No token, user is not logged in
-        return;
+        return null;
       }
 
-      // Set the token for all subsequent API requests
       httpProvider.setAuthToken('directus', accessToken);
 
-      const authDataSource = new AuthRemoteDataSource();
-      const authRepository = new AuthRepositoryImpl(authDataSource);
-      const getCurrentUserUseCase = new GetCurrentUserUseCaseImpl(authRepository);
-
       try {
+        // Try to fetch the user with the current token
         const currentUser = await getCurrentUserUseCase.execute();
-        setUser(currentUser);
-      } catch (error) {
-        // The token is likely expired or invalid
-        console.error("Session check failed, token might be invalid:", error);
-        setUser(null);
-        // Clean up invalid tokens
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        return currentUser;
+      } catch (error: any) {
+        // Check if the error is specifically a token expired error
+        if (error?.response?.data?.errors?.[0]?.extensions?.code === 'TOKEN_EXPIRED') {
+          console.log("Access token expired. Attempting to refresh...");
+          const refreshToken = localStorage.getItem('refreshToken');
+          if (!refreshToken) {
+            return null; // No refresh token, user must log in again
+          }
+
+          try {
+            // Get a new access token and a new refresh token
+            const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await refreshTokenUseCase.execute(refreshToken);
+            
+            // Store the new (and potentially rotated) tokens
+            localStorage.setItem('accessToken', newAccessToken);
+            localStorage.setItem('refreshToken', newRefreshToken);
+            
+            // Set the new token for the provider and retry fetching the user
+            httpProvider.setAuthToken('directus', newAccessToken);
+            return await getCurrentUserUseCase.execute();
+
+          } catch (refreshError) {
+            console.error("Failed to refresh token:", refreshError);
+            return null; // Refresh failed, user must log in again
+          }
+        }
+        
+        // For any other errors, re-throw to be caught by the outer catch
+        throw error;
       }
     };
 
-    checkUserSession();
+    const checkSession = async () => {
+      try {
+        const currentUser = await handleSession();
+        setUser(currentUser);
+      } catch (error) {
+        // This catches errors from the initial user fetch or the refresh process
+        console.error("Session check failed, redirecting to login:", error);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        setUser(null);
+      }
+    };
+
+    checkSession();
   }, []);
 
-  // Show a loading indicator while the session is being checked
   if (user === undefined) {
     return <div>Loading session...</div>;
   }
 
-  // If there's a user, show the protected content, otherwise redirect to sign-in
   return user ? <Outlet /> : <Navigate to={RouterPath.SIGN_IN} />;
 };
 

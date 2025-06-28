@@ -13,7 +13,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     return this.remoteDataSource.logout(refreshToken);
   }
 
-  async refreshToken(refreshToken: string): Promise<{ accessToken: string, expires: number }> {
+  async refreshToken(refreshToken: string): Promise<{ accessToken: string, expires: number, refreshToken: string }> {
     return this.remoteDataSource.refreshToken(refreshToken);
   }
 

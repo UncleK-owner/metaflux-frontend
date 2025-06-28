@@ -30,11 +30,11 @@ export class AuthRemoteDataSource {
     httpProvider.setAuthToken('directus', '');
   }
 
-  async refreshToken(refreshToken: string): Promise<{ accessToken: string, expires: number }> {
-    const response = await httpProvider.post<AuthResponse>('directus', '/auth/refresh', { refresh_token: refreshToken });
-    const { access_token, expires } = response.data.data;
+  async refreshToken(refreshToken: string): Promise<{ accessToken: string; expires: number; refreshToken: string }> {
+    const response = await httpProvider.post<{ data: { access_token: string; expires: number; refresh_token: string } }>('directus', '/auth/refresh', { refresh_token: refreshToken });
+    const { access_token, expires, refresh_token: newRefreshToken } = response.data.data;
     httpProvider.setAuthToken('directus', access_token);
-    return { accessToken: access_token, expires };
+    return { accessToken: access_token, expires, refreshToken: newRefreshToken };
   }
 
   async requestPasswordReset(email: string): Promise<void> {
@@ -46,11 +46,7 @@ export class AuthRemoteDataSource {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    try {
-      const response = await httpProvider.get<UserResponse>('directus', '/users/me');
-      return response.data.data;
-    } catch (error) {
-      return null;
-    }
+    const response = await httpProvider.get<UserResponse>('directus', '/users/me');
+    return response.data.data;
   }
 }
